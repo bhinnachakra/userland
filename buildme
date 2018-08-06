@@ -34,11 +34,12 @@ else
 	# Cross compile on a more capable machine
 	mkdir -p build/arm-linux/$BUILDSUBDIR
 	pushd build/arm-linux/$BUILDSUBDIR
-	cmake -DCMAKE_TOOLCHAIN_FILE=../../../makefiles/cmake/toolchains/arm-linux-gnueabihf.cmake -DCMAKE_BUILD_TYPE=$BUILDTYPE ../../..
-	make -j `nproc`
-
+	cmake -DCMAKE_INSTALL_PREFIX=../../install -DCMAKE_TOOLCHAIN_FILE=../../../makefiles/cmake/toolchains/armv8-rpi3-linux-gnueabihf.cmake -DCMAKE_BUILD_TYPE=$BUILDTYPE ../../.. -G Ninja
+    TGT_INST_DIR=../../install
 	if [ "$1" != "" ]; then
-		sudo make install DESTDIR=$1
+		make install TGT_INST_DIR=$1
 	fi
+    DESTDIR=$TGT_INST_DIR cmake --build . --target install
+
 fi
 popd
